@@ -1,89 +1,89 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import axios from 'axios';
 
-const Compagnie = () => {
+function Compagnie() {
   const [dati, setDati] = useState([]);
-  const [errore, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDati = async () => {
       try {
-        const response = await axios.get('http://172.20.0.1:5002/api/compagnie_voli');
+        const response = await axios.get('http://localhost:5002/api/compagnie_voli');
         setDati(response.data);
       } catch (err) {
-        setError('Errore nel recupero dei dati');
+        console.error('Errore nel recupero dei dati: ', err);
+        Alert.alert('Errore', 'Errore nel recupero dei dati');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDati();
   }, []);
 
-  if (errore) {
-    return <Text>{errore}</Text>;
+  if (loading) {
+    return <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />;
   }
 
   return (
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.tableRowHeader}>
-          <Text style={styles.tableHeaderCell}>Nome</Text>
-          <Text style={styles.tableHeaderCell}>Codice Compagnia</Text>
-        </View>
-  
-       
-        {dati.map((item, index) => (
-          <View
-            key={index}
-            style={[styles.tableRow, index % 2 === 0 && styles.evenRow]}
-          >
-            <Text style={styles.tableCell}>{item[0]}</Text>
-            <Text style={styles.tableCell}>{item[1]}</Text>
+    <View style={styles.container}>
+      <FlatList
+        data={dati}
+        keyExtractor={(item, index) => index.toString()}
+        ListHeaderComponent={() => (
+          <View style={styles.headerRow}>
+            <Text style={styles.headerText}>Compagnia</Text>
+            <Text style={styles.headerText}>Anno di Fondazione</Text>
           </View>
-        ))}
-      </ScrollView>
-    );
-  };
-  
-  const { width } = Dimensions.get('window'); 
-  
-  const styles = StyleSheet.create({
-    scrollContainer: {
-      padding: 20,
-    },
-    tableRowHeader: {
-      flexDirection: 'row',
-      borderBottomWidth: 1,
-      borderBottomColor: '#e8dfdf',
-      backgroundColor: '#aaa6a6',
-      paddingVertical: 12,
-      paddingHorizontal: 15,
-    },
-    tableHeaderCell: {
-      flex: 1,
-      textAlign: 'left',
-      fontWeight: 'bold',
-      fontSize: width <= 480 ? 14 : 16, 
-      color: '#0f100f',
-    },
-    tableRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingVertical: 12,
-      paddingHorizontal: 15,
-      borderBottomWidth: 1,
-      borderBottomColor: '#e8dfdf',
-    },
-    evenRow: {
-      backgroundColor: 'hsl(0, 31%, 95%)',
-    },
-    tableCell: {
-      flex: 1,
-      textAlign: 'left',
-      fontSize: width <= 480 ? 14 : 16, 
-      color: '#804b4b',
-    },
-    responsive: {
-      fontSize: width <= 480 ? 12 : 16,
-    },
-  });
+        )}
+        renderItem={({ item }) => (
+          <View style={styles.row}>
+            <Text style={styles.cell}>{item[0]}</Text>
+            <Text style={styles.cell}>{item[1]}</Text>
+          </View>
+        )}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#f5f5f5',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  headerText: {
+    flex: 1,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingVertical: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    elevation: 2,
+  },
+  cell: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#333',
+  },
+});
+
 export default Compagnie;

@@ -1,7 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const Navbar = ({ navigation }) => {
+const Navbar = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.navbarContainer}>
       <TouchableOpacity onPress={() => navigation.navigate('Voli')}>
@@ -17,27 +20,26 @@ const Navbar = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   navbarContainer: {
-    textAlign:"center",
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
     backgroundColor: 'rgb(78, 76, 76)',
     padding: 10,
-    color:"white",
-    width:"100%",
-    position:"fixed",
-    top:200,
-    left:0,
-    alignitems:"center",
-    zIndex:1,
-    flex:1
+    color: 'white',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    zIndex: 999,
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 150,
   },
   navLinks: {
     color: 'white',
-    fontSize: 16,
-    marginRight: 15
+    fontSize: 18,
+    marginRight: 15,
+    textDecorationLine: 'underline',
   },
-});
+};
 
 export default Navbar;

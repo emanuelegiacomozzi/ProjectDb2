@@ -1,54 +1,59 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const Header = () => {
   const imgUrl = "https://static.vecteezy.com/ti/vettori-gratis/p1/4185812-set-di-aereo-icona-nero-vettore-aereo-simbolo-set-gratuito-vettoriale.jpg";
+  const navigation = useNavigation();
+
   return (
     <View style={styles.headerContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.Agenzia}>ViaggiaConNoi.it</Text>
+        <Text style={styles.agenzia}>ViaggiaConNoi.it</Text>
         <Image source={{ uri: imgUrl }} style={styles.logo} />
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.navLink}>Home Page</Text>
+        <Text style={styles.navLinks}>Home Page</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   headerContainer: {
-    textAlign: "center",
-    padding: 5,
+    textAlign: 'center',
     backgroundColor: 'black',
+    padding: 50,
+    color: 'white',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    color:"white",
-    position:"fixed",
-    top:0,
-    left:0,
-    justifyContent:"space-evenly",
-    zIndex:1000
+    zIndex: 1000,
   },
-  titleContainer: {
-    justifyContent:"center",
-    alignItems: 'center',
-    
+  navLinks: {
+    color: 'white',
+    fontSize: 18,
+    marginRight: 15,
+    textDecorationLine: 'underline',
   },
-  Agenzia: {
-    lineHeight: 48,
-    fontSize: 40,
+  agenzia: {
+    fontSize: 24,
+    color: 'white',
     margin: 0,
   },
-  logo: {
-    height: 96,
-    maWidth: '100%',
-    padding:24,
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
   },
-  navLink:{
-    marginRight:15,
-    color:"white",
-    fontSize: 40
-  }
-});
+  logo: {
+    height: 60,
+    width: 70,
+    padding: 5,
+    transition: 'filter 300ms',
+  },
+};
 
 export default Header;

@@ -1,89 +1,90 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import axios from 'axios';
 
-const Voli = () => {
+function Voli() {
   const [dati, setDati] = useState([]);
-  const [errore, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDati = async () => {
       try {
-        const response = await axios.get('http://172.20.0.1:5002/api/voli');
+        const response = await axios.get('http://localhost:5002/api/voli');
         setDati(response.data);
       } catch (err) {
-        setError('Errore nel recupero dei dati');
+        console.error('Errore nel recupero dei dati: ', err);
+        Alert.alert('Errore', 'Errore nel recupero dei dati');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDati();
   }, []);
 
-  if (errore) {
-    return <Text>{errore}</Text>;
+  if (loading) {
+    return <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />;
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.tableRowHeader}>
-        <Text style={styles.tableHeaderCell}>Codice Volo</Text>
-        <Text style={styles.tableHeaderCell}>Compagnia</Text>
-        <Text style={styles.tableHeaderCell}>Durata (minuti)</Text>
-      </View>
-      {dati.map((item, index) => (
-        <View
-          key={index}
-          style={[styles.tableRow, index % 2 === 0 && styles.evenRow]}
-        >
-          <Text style={styles.tableCell}>{item[0]}</Text>
-          <Text style={styles.tableCell}>{item[1]}</Text>
-          <Text style={styles.tableCell}>{item[2] || 'NULL'}</Text>
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        data={dati}
+        keyExtractor={(item, index) => index.toString()}
+        ListHeaderComponent={() => (
+          <View style={styles.headerRow}>
+            <Text style={styles.headerText}>Codice Volo</Text>
+            <Text style={styles.headerText}>Compagnia</Text>
+            <Text style={styles.headerText}>Durata</Text>
+          </View>
+        )}
+        renderItem={({ item }) => (
+          <View style={styles.row}>
+            <Text style={styles.cell}>{item[0]}</Text>
+            <Text style={styles.cell}>{item[1]}</Text>
+            <Text style={styles.cell}>{item[2] || 'N/A'}</Text>
+          </View>
+        )}
+      />
+    </View>
   );
-};
-
-const { width } = Dimensions.get('window'); 
+}
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 20,
-  },
-  tableRowHeader: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e8dfdf',
-    backgroundColor: '#aaa6a6',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-  },
-  tableHeaderCell: {
+  container: {
     flex: 1,
-    textAlign: 'left',
+    padding: 10,
+    backgroundColor: '#f5f5f5',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  headerText: {
+    flex: 1,
     fontWeight: 'bold',
-    fontSize: width <= 480 ? 14 : 16, 
-    color: '#0f100f',
+    color: 'white',
+    textAlign: 'center',
   },
-  tableRow: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e8dfdf',
+    backgroundColor: 'white',
+    paddingVertical: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    elevation: 2,
   },
-  evenRow: {
-    backgroundColor: 'hsl(0, 31%, 95%)',
-  },
-  tableCell: {
+  cell: {
     flex: 1,
-    textAlign: 'left',
-    fontSize: width <= 480 ? 14 : 16,
-    color: '#804b4b',
-  },
-  responsive: {
-    fontSize: width <= 480 ? 12 : 16,
+    textAlign: 'center',
+    color: '#333',
   },
 });
 
