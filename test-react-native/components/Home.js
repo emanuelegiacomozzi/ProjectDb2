@@ -6,7 +6,7 @@ const Home = () => {
     <View style={styles.container}>
       <Text style={styles.colore}>Benvenuti alla nostra agenzia di viaggi!</Text>
       <Text style={styles.colore}>
-        Scopri tutte le informazioni cliccando ai link qui sopra.
+        Scopri tutte le informazioni cliccando ai link qui sopra!
       </Text>
     </View>
   );
