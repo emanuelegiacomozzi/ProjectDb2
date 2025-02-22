@@ -32,7 +32,11 @@
 # aprire un secondo terminale in vscode:
    # cd test-react-native(sposta nella directory contenente l'applicazione in reactNative)
    # npm install (installa le dipendenze)
-   # Node -v , Npm -v (verifica le versioni di node e npm) 
+   # Node -v , Npm -v (verifica le versioni di node e nspm) 
    # npm install -g expo-cli (per installare expo cli per gestire il progetto React Native)
+   # il progetto utlizza React Navigation, perciò installare le librerie necessarie:
+   # npm install @react-navigation/native
+   # npm install @react-navigation/stack
+   # npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons
    # npm start per avviare il progetto
    # selezionare dove avviare il progetto: es. a(per emulatore android), web(per visualizzare l'app via web), ecc...
